@@ -1,0 +1,11 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
+rootProject.name = 'rbac-sso'
+include 'rbac-sso-core'
+include 'rbac-sso-server'
+include 'rbac-sso-client'
+include 'rbac-sso-resourceserver'
+

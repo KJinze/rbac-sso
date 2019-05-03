@@ -1,0 +1,96 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.1.RELEASE'
+    id 'java'
+}
+
+group = 'com.diqie.rbac'
+version '0.1'
+
+ext {
+    springCloudSecurityVer = '2.1.1.RELEASE'
+}
+
+
+//1.所有项目共享
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+    repositories {
+        mavenLocal()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        mavenCentral()
+    }
+
+    jar {
+        enabled = true
+    }
+
+}
+//2.子项目共享
+subprojects {
+    version = '0.1'
+    
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-dependencies:2.1.1.RELEASE'
+        implementation 'org.springframework.security.oauth:spring-security-oauth2:2.1.1.RELEASE'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.apache.commons:commons-lang3:3.7'
+        implementation 'com.alibaba:fastjson:1.2.41'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+}
+//3.非核心项目共享
+configure(subprojects.findAll { it.name == 'rbac-sso-server' || it.name == 'rbac-sso-client' || it.name == 'rbac-sso-resourceserver'}) {
+    dependencies {
+        compile project(':rbac-sso-core')
+    }
+}
+project(':rbac-sso-core') {
+    dependencies {
+        compile fileTree(include: ['*.jar'], dir: 'lib')
+    }
+}
+
+project(':rbac-sso-server') {
+    bootJar{
+        mainClassName = 'com.diqie.rbac.sso.server.SsoServerApplication'
+    }
+
+    apply plugin: 'war'
+
+    dependencies {
+        implementation 'org.springframework.security:spring-security-jwt:1.0.9.RELEASE'
+        implementation 'org.springframework.mobile:spring-mobile-device:1.1.4.RELEASE'
+        implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+        implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.0'
+        implementation 'com.alibaba:druid:1.1.9'
+        implementation 'mysql:mysql-connector-java'
+        implementation 'com.google.zxing:core:3.3.0'
+    }
+}
+project(':rbac-sso-client') {
+    dependencies {
+        implementation "org.springframework.cloud:spring-cloud-starter-oauth2:${springCloudSecurityVer}"
+    }
+}
+
+project(':rbac-sso-resourceserver') {
+    dependencies {
+        implementation "org.springframework.cloud:spring-cloud-starter-oauth2:${springCloudSecurityVer}"
+        implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.0'
+        implementation 'com.alibaba:druid:1.1.9'
+        implementation 'mysql:mysql-connector-java'
+    }
+}
+
+

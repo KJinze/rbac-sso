@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--created by yinlf    2019-03-09 16:36:09 -->
+<!--0 一些前置信息配置 -->
+<mapper namespace="com.diqie.rbac.sso.server.mapper.RbacUserMapper" >
+<!--1 返回所有字段的SQL字句 -->
+<sql id="allColumns" >
+    user_id  userId,
+    user_name  userName,
+    user_password  userPassword,
+    user_nickname  userNickname,
+    user_code  userCode,
+    user_mobile  userMobile,
+    user_email  userEmail,
+    user_sex  userSex,
+    user_birthday  userBirthday,
+    is_delete  isDelete
+    </sql>
+
+<!--2 根据主键ID查询单个实体 -->
+<select id="getRbacUserById" resultType="RbacUser" >
+    select
+    <include refid="allColumns"/>
+    from    RBAC_USER
+    where    user_id = #{id}
+</select>
+    <select id="getRbacUserByUserName" resultType="RbacUser" >
+        select
+        <include refid="allColumns"/>
+        from    RBAC_USER
+        where    user_name = #{userName} and is_delete = '0'
+    </select>
+
+<!--3 根据条件查询实体list -->
+    <select id="listRbacUser" resultType="RbacUser" >
+        select
+        <include refid="allColumns"/>
+        from    RBAC_USER
+    <where>
+        is_delete = '0'
+        <if test="userId != null" >
+        AND    user_id = #{userId}
+        </if>
+        <if test="userName != null" >
+        AND    user_name = #{userName}
+        </if>
+        <if test="userPassword != null" >
+        AND    user_password = #{userPassword}
+        </if>
+        <if test="userNickname != null" >
+        AND    user_nickname = #{userNickname}
+        </if>
+        <if test="userCode != null" >
+        AND    user_code = #{userCode}
+        </if>
+        <if test="userMobile != null" >
+        AND    user_mobile = #{userMobile}
+        </if>
+        <if test="userEmail != null" >
+        AND    user_email = #{userEmail}
+        </if>
+        <if test="userSex != null" >
+        AND    user_sex = #{userSex}
+        </if>
+        <if test="userBirthday != null" >
+        AND    user_birthday = #{userBirthday}
+        </if>
+    </where>
+    </select>
+<!--4 根据条件查询实体list,返回分页对象 -->
+
+<!--5 新增实体对象 -->
+<insert id="insertRbacUser" parameterType="RbacUser" >
+    insert into RBAC_USER (
+user_id  ,user_name  ,user_password  ,user_nickname  ,user_code  ,user_mobile  ,user_email  ,user_sex  ,user_birthday  ,is_delete  
+    )  values  (
+#{userId},#{userName},#{userPassword},#{userNickname},#{userCode},#{userMobile},#{userEmail},#{userSex},#{userBirthday},  #{isDelete}
+    )
+</insert>
+<!--6 修改实体对象 -->
+<update id="updateRbacUser" parameterType="RbacUser" >
+    update RBAC_USER
+    <set >
+        <if test="userId != null" >
+        user_id = #{userId},
+        </if>
+        <if test="userName != null" >
+        user_name = #{userName},
+        </if>
+        <if test="userPassword != null" >
+        user_password = #{userPassword},
+        </if>
+        <if test="userNickname != null" >
+        user_nickname = #{userNickname},
+        </if>
+        <if test="userCode != null" >
+        user_code = #{userCode},
+        </if>
+        <if test="userMobile != null" >
+        user_mobile = #{userMobile},
+        </if>
+        <if test="userEmail != null" >
+        user_email = #{userEmail},
+        </if>
+        <if test="userSex != null" >
+        user_sex = #{userSex},
+        </if>
+        <if test="userBirthday != null" >
+        user_birthday = #{userBirthday},
+        </if>
+        <if test="isDelete != null" >
+        is_delete = #{isDelete},
+        </if>
+    </set>
+    where user_id = #{userId}
+</update>
+<!--7 删除实体对象,根据主键ID -->
+    <delete id="deleteRbacUser">
+        delete from   RBAC_USER
+        where
+    user_id = #{id}
+    </delete>
+<!--8 删除实体对象列表,根据主键ID列表 -->
+<!--9 返回所有字段的对象map,用于级联 -->
+    <resultMap type="RbacUser" id="RbacUserMap">
+        <id property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userPassword" column="user_password"/>
+        <result property="userNickname" column="user_nickname"/>
+        <result property="userCode" column="user_code"/>
+        <result property="userMobile" column="user_mobile"/>
+        <result property="userEmail" column="user_email"/>
+        <result property="userSex" column="user_sex"/>
+        <result property="userBirthday" column="user_birthday"/>
+        <result property="isDelete" column="is_delete"/>
+    </resultMap>
+</mapper>

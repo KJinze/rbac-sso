@@ -1,0 +1,50 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+/out/
+/log/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### sub ###
+/rbac-sso-server/log/
+/rbac-sso-server/out/
+/rbac-sso-server/build/
+/rbac-sso-core/log/
+/rbac-sso-core/out/
+/rbac-sso-core/build/
+/rbac-sso-client/log/
+/rbac-sso-client/out/
+/rbac-sso-client/build/
+/rbac-sso-resourceserver/log/
+/rbac-sso-resourceserver/out/
+/rbac-sso-resourceserver/build/

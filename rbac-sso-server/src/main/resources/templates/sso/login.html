@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Login page</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="/css/main.css" th:href="@{/ui-thems/sso/css/main.css}" />
+        <script th:src="@{/js-lib/jquery1/jquery.min.js}" type="text/javascript"></script>
+	</head>
+    <body>
+        <h1>Login page</h1>
+        <p>Example user: user / password</p>
+        <p th:if="${param.error}" class="error">Wrong user or password</p>
+        <form th:action="@{/rbac/auth}" method="post">
+            <input type="hidden" name="loginType" value="from"/>
+            <label for="username">Username</label>:
+            <input type="text" id="username" name="username" autofocus="autofocus" /> <br />
+            <label for="password">Password</label>:
+            <input type="password" id="password" name="password" /> <br />
+            <input type="submit" value="Log in" />
+        </form>
+        <img id="qrcode">
+        <div id="lost"></div>
+    </body>
+    <script>
+        var int=self.setInterval("check_qrlogin()",2000);
+        var lostCount=120;
+        var pageId = new Date().getMilliseconds();
+
+        $(function () {
+            $.ajax({
+                type:"POST",
+                url: "/sso-server/qr/getQrCodeUrl",
+                dataType: "json",
+                success: function (data) {
+                    if(data!=null){
+                        pageId = data.pageId;
+                        $('#qrcode').attr('src',data.url);
+                    }
+                },
+                error: function () {
+                    alert('错误信息');
+                }
+            });
+        });
+        function check_qrlogin(){
+            if(lostCount<=0){
+                int=window.clearInterval(int);
+                $('#lost').text("验证码已失效");
+            }
+            $.get("/sso-server/rbac/stat/check?pageId="+pageId,function(data){
+                if(data=="2"){
+                    int=window.clearInterval(int);
+                    window.location.href="/sso-server/rbac/auth?loginType=qrcode&pageId="+pageId;
+                }else if(data=="1"){
+                    $('#lost').text("扫描成功");
+                }
+            });
+        }
+
+    </script>
+</html>
